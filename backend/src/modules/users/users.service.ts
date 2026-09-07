@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './user.entity';
+import { PublicUser, User } from './user.entity';
 import seedUsers from './data/users.json';
 
 @Injectable()
@@ -12,42 +12,50 @@ export class UsersService {
     ...user,
   }));
 
-  findAll(): User[] {
-    return this.users;
+  findAll(): PublicUser[] {
+    return this.users.map((user) => this.toPublic(user));
   }
 
-  findOne(id: string): User {
-    const user = this.users.find((candidate) => candidate.id === id);
-    if (!user) {
-      throw new NotFoundException(`User with id "${id}" not found`);
-    }
-    return user;
+  findOne(id: string): PublicUser {
+    return this.toPublic(this.getEntity(id));
   }
 
-  create(dto: CreateUserDto): User {
+  // Returns the full record (including the password) — for authentication only.
+  findByEmail(email: string): User | undefined {
+    const normalized = email.toLowerCase();
+    return this.users.find(
+      (candidate) => candidate.email.toLowerCase() === normalized,
+    );
+  }
+
+  create(dto: CreateUserDto): PublicUser {
     const user: User = {
       id: randomUUID(),
       name: dto.name,
       email: dto.email,
+      password: dto.password ?? '',
       role: dto.role ?? 'user',
       createdAt: new Date().toISOString(),
     };
     this.users.push(user);
-    return user;
+    return this.toPublic(user);
   }
 
-  update(id: string, dto: UpdateUserDto): User {
-    const user = this.findOne(id);
+  update(id: string, dto: UpdateUserDto): PublicUser {
+    const user = this.getEntity(id);
     if (dto.name !== undefined) {
       user.name = dto.name;
     }
     if (dto.email !== undefined) {
       user.email = dto.email;
     }
+    if (dto.password !== undefined) {
+      user.password = dto.password;
+    }
     if (dto.role !== undefined) {
       user.role = dto.role;
     }
-    return user;
+    return this.toPublic(user);
   }
 
   remove(id: string): void {
@@ -56,5 +64,17 @@ export class UsersService {
       throw new NotFoundException(`User with id "${id}" not found`);
     }
     this.users.splice(index, 1);
+  }
+
+  private getEntity(id: string): User {
+    const user = this.users.find((candidate) => candidate.id === id);
+    if (!user) {
+      throw new NotFoundException(`User with id "${id}" not found`);
+    }
+    return user;
+  }
+
+  private toPublic({ password: _password, ...publicUser }: User): PublicUser {
+    return publicUser;
   }
 }

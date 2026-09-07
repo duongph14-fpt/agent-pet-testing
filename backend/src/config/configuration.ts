@@ -3,6 +3,8 @@ export interface AppConfig {
   nodeEnv: string;
   apiPrefix: string;
   corsOrigin: string[];
+  authSecret: string;
+  authTokenTtl: number;
 }
 
 export default (): AppConfig => ({
@@ -13,4 +15,7 @@ export default (): AppConfig => ({
     .split(',')
     .map((origin) => origin.trim())
     .filter(Boolean),
+  authSecret: process.env.AUTH_SECRET ?? 'dev-only-insecure-secret',
+  // Access token lifetime in seconds (default: 1 hour).
+  authTokenTtl: parseInt(process.env.AUTH_TOKEN_TTL ?? '3600', 10),
 });
