@@ -4,7 +4,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/http-exception.filter';
 import { LoggingInterceptor } from './common/logging.interceptor';
-import { AppConfig } from './config/configuration';
+import { AppConfig, DEFAULT_AUTH_SECRET } from './config/configuration';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
@@ -13,6 +13,15 @@ async function bootstrap(): Promise<void> {
   const apiPrefix = config.get('apiPrefix', { infer: true });
   const port = config.get('port', { infer: true });
   const corsOrigin = config.get('corsOrigin', { infer: true });
+
+  // Fail fast rather than sign tokens with a public default secret in prod.
+  const nodeEnv = config.get('nodeEnv', { infer: true });
+  const authSecret = config.get('authSecret', { infer: true });
+  if (nodeEnv === 'production' && authSecret === DEFAULT_AUTH_SECRET) {
+    throw new Error(
+      'AUTH_SECRET must be set to a strong, unique value in production',
+    );
+  }
 
   app.setGlobalPrefix(apiPrefix);
   app.enableCors({ origin: corsOrigin });
