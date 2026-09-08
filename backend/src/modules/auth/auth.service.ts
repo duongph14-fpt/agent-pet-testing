@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createHmac, timingSafeEqual } from 'crypto';
 import { AppConfig } from '../../config/configuration';
+import { verifyPassword } from '../../common/password';
 import { PublicUser, User } from '../users/user.entity';
 import { UsersService } from '../users/users.service';
 import { LoginDto } from './dto/login.dto';
@@ -30,12 +31,13 @@ export class AuthService {
   ) {}
 
   // Checks the supplied credentials and returns the public user when they match.
+  // Users stored without a password (empty hash) can never authenticate.
   validateUser(email: string, password: string): PublicUser | null {
     const user = this.usersService.findByEmail(email);
     if (!user || !user.password) {
       return null;
     }
-    if (!AuthService.constantTimeEquals(user.password, password)) {
+    if (!verifyPassword(password, user.password)) {
       return null;
     }
     const { password: _password, ...publicUser } = user;

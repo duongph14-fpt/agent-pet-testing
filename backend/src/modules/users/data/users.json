@@ -3,7 +3,7 @@
     "id": "11111111-1111-1111-1111-111111111111",
     "name": "Ada Lovelace",
     "email": "ada.lovelace@example.com",
-    "password": "ada-password-1",
+    "password": "scrypt$f0c2f64329b38e8f37e00730effeecac$86364a7af73ed3736eb781c10e32ece39eb251fb542a5c1e4d63a0b7a7f98c7330e2a0a6f3819bc36cbd1053c32fafefad36dee320c669dcf15ee526cb2c458a",
     "role": "admin",
     "createdAt": "2026-01-15T09:00:00.000Z"
   },
@@ -11,7 +11,7 @@
     "id": "22222222-2222-2222-2222-222222222222",
     "name": "Alan Turing",
     "email": "alan.turing@example.com",
-    "password": "alan-password-1",
+    "password": "scrypt$6a8d400c95660f23422dd5a0405dbe57$1c6b0e1f29ba77bb8b3410ccd17a756391f54ad71c203b250c1d2d402b5300a5ca0fb77d4fd41612c386704cf9d7070fc01f89c5cdba5e5b221d8e98572fcbbb",
     "role": "user",
     "createdAt": "2026-02-03T10:30:00.000Z"
   },
@@ -19,7 +19,7 @@
     "id": "33333333-3333-3333-3333-333333333333",
     "name": "Grace Hopper",
     "email": "grace.hopper@example.com",
-    "password": "grace-password-1",
+    "password": "scrypt$e114e19dc89c87b565dbd5366888d29a$26f7c13c4146cf4afd28cf3a20c083795fac3672209208a56bfa68b50ad84d905b38a4c32de2c5f2958f58decb1ea98d1a6eb82731dbd96671dbf96be9d52d1d",
     "role": "user",
     "createdAt": "2026-02-20T14:45:00.000Z"
   },
@@ -27,7 +27,7 @@
     "id": "44444444-4444-4444-4444-444444444444",
     "name": "Katherine Johnson",
     "email": "katherine.johnson@example.com",
-    "password": "katherine-password-1",
+    "password": "scrypt$6303aa63a802cb93447e888dc74183ae$2768908e0c0c78784a44cfc770c413a75b9cdfbb1c28c90502e02b0a29b306d7db11eaf89db27aaff1a07a4174a457c9a3e8e05aa65acd91980c83bea279bf50",
     "role": "user",
     "createdAt": "2026-03-11T08:15:00.000Z"
   }

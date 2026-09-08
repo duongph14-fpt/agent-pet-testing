@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
+import { hashPassword } from '../../common/password';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PublicUser, User } from './user.entity';
@@ -33,7 +34,8 @@ export class UsersService {
       id: randomUUID(),
       name: dto.name,
       email: dto.email,
-      password: dto.password ?? '',
+      // Hashed at rest; empty when no password is supplied (login disabled).
+      password: dto.password ? hashPassword(dto.password) : '',
       role: dto.role ?? 'user',
       createdAt: new Date().toISOString(),
     };
@@ -50,7 +52,7 @@ export class UsersService {
       user.email = dto.email;
     }
     if (dto.password !== undefined) {
-      user.password = dto.password;
+      user.password = hashPassword(dto.password);
     }
     if (dto.role !== undefined) {
       user.role = dto.role;
